@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import WebCam from "../../components/WebCam";
+import RecordButton from "../../components/RecordButton";
 
 function Home() {
     const videoElem = useRef(null);
@@ -8,76 +9,16 @@ function Home() {
     const webCam = useRef(null);
 
     let mediaRecorder;
-    let recordedChunks = [];
+    const [recordedChunks, setRecordedChunks] = useState([]);
 
-    // Options for getDisplayMedia() with both video and audio
-    const displayMediaOptions = {
-      video: {
-        displaySurface: "window", // Can also be "browser" or "monitor"
-      },
-      audio: false, // Temporarily disable audio here, will add microphone separately
-    };
-
-    const audioOptions = {
-      audio: {
-        echoCancellation: true,
-        noiseSuppression: true,
-        sampleRate: 44100,
-      }
-    };
-
-    const customConsoleError = (msg) => {
-      if (logElem.current) {
-        logElem.current.textContent = `${logElem.current.textContent}\nError: ${msg}`;
-      }
-    };
-
-    async function startCapture() {
-      if (!logElem.current) return;
-      logElem.current.textContent = "";
-
-      try {
-        const screenStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
-        const audioStream = await navigator.mediaDevices.getUserMedia(audioOptions); // Capture microphone audio
-
-        // Combine screen and audio streams
-        const combinedStream = new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]);
-
-        if (videoElem.current) {
-          videoElem.current.srcObject = combinedStream;
-          startRecording(combinedStream); // Start recording with combined streams
-        }
-      } catch (err) {
-        customConsoleError(err);
-      }
+    const handleDownload = (showDownloadButton) => {
+      if (showDownloadButton === true) downloadElem.current.style.display = "block";
     }
 
-    function stopCapture() {
-      if (!videoElem.current) return;
-
-      let tracks = videoElem.current.srcObject.getTracks();
-      tracks.forEach((track) => track.stop());
-      videoElem.current.srcObject = null;
-      
-      if (mediaRecorder) mediaRecorder.stop(); // Stop recording
-
-      // Show download button
-      if (downloadElem.current) downloadElem.current.style.display = "block";
+    const handleRecordedChunks = (value) =>{
+      setRecordedChunks(value);
     }
-
-    function startRecording(stream) {
-      recordedChunks = [];
-      mediaRecorder = new MediaRecorder(stream);
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          recordedChunks.push(event.data);
-        }
-      };
-
-      mediaRecorder.start();
-      console.log("Recording started.");
-    }
+  
 
     function downloadRecording() {
       const blob = new Blob(recordedChunks, { type: "video/mp4" });
@@ -124,12 +65,13 @@ function Home() {
             ></video>
             <br />
             <div class="flex justify-between">
-              <button className="p-1 bg-blue-950" onClick={startCapture}>
-                Gravar tela
-              </button>
-              <button className="p-1 bg-blue-950" onClick={stopCapture}>
-                Parar gravação
-              </button>
+              <RecordButton 
+                logElem={logElem} 
+                videoElem={videoElem} 
+                mediaRecorder={mediaRecorder} 
+                handleDownload={handleDownload} 
+                handleRecordedChunks={handleRecordedChunks} 
+              />
               <br />
               <WebCam webCamRef={webCam}/>
             </div>
