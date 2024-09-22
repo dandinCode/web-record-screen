@@ -26,12 +26,6 @@ function Home() {
       }
     };
 
-    const customConsoleLog = (msg) => {
-      if (logElem.current) {
-        logElem.current.textContent = `${logElem.current.textContent}\n${msg}`;
-      }
-    };
-
     const customConsoleError = (msg) => {
       if (logElem.current) {
         logElem.current.textContent = `${logElem.current.textContent}\nError: ${msg}`;
@@ -53,8 +47,6 @@ function Home() {
           videoElem.current.srcObject = combinedStream;
           startRecording(combinedStream); // Start recording with combined streams
         }
-
-        dumpOptionsInfo(screenStream);
       } catch (err) {
         customConsoleError(err);
       }
@@ -84,7 +76,7 @@ function Home() {
       };
 
       mediaRecorder.start();
-      customConsoleLog("Recording started.");
+      console.log("Recording started.");
     }
 
     function downloadRecording() {
@@ -103,60 +95,57 @@ function Home() {
       URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      customConsoleLog("Recording downloaded.");
+      console.log("Recording downloaded.");
     }
 
-    function dumpOptionsInfo(screenStream) {
-      const videoTrack = screenStream.getVideoTracks()[0];
-
-      customConsoleLog("Track settings:");
-      customConsoleLog(JSON.stringify(videoTrack.getSettings(), null, 2));
-      customConsoleLog("Track constraints:");
-      customConsoleLog(JSON.stringify(videoTrack.getConstraints(), null, 2));
-    }
+   
 
     return (
       <>
-        <div className="bg-gray-950 text-white" >
-          <h2 >Gravador de tela</h2>
+        <div className="flex justify-center" >
+          <div  className="text-white">
+            <h1 className="flex justify-center font-serif text-5xl py-4">Gravador de tela</h1>
 
-          <video
-            ref={videoElem}
-            muted
-            autoPlay
-            style={{ width: "600px"}}
-            className="bg-gray-500"
-          ></video>
-          <br />
-          <video
-            ref={webCam}
-            controls
-            muted
-            autoPlay
-            hidden
-            style={{ width: "100px", border: "1px solid black" }}
-          ></video>
-          <br />
-          <button className="p-1 m-2 bg-blue-950" onClick={startCapture}>
-            Gravar tela
-          </button>
-          |
-          <button className="p-1 m-2 bg-blue-950" onClick={stopCapture}>
-            Parar gravação
-          </button>
-          <br />
-          <WebCam webCamRef={webCam}/>
-          <br />
-          <button
-            className="p-1 m-2 bg-blue-950"
-            ref={downloadElem}
-            style={{ display: "none" }}
-            onClick={downloadRecording}
-          >
-            Baixar gravação
-          </button>
-          <br />
-          <pre ref={logElem}></pre>
+            <video
+              ref={videoElem}
+              muted
+              autoPlay
+              style={{ width: "600px"}}
+              className="bg-gray-500"
+            ></video>
+            <br />
+            <video
+              ref={webCam}
+              controls
+              muted
+              autoPlay
+              hidden
+              style={{ width: "100px", border: "1px solid black" }}
+            ></video>
+            <br />
+            <div class="flex justify-between">
+              <button className="p-1 bg-blue-950" onClick={startCapture}>
+                Gravar tela
+              </button>
+              <button className="p-1 bg-blue-950" onClick={stopCapture}>
+                Parar gravação
+              </button>
+              <br />
+              <WebCam webCamRef={webCam}/>
+            </div>
+            
+            <br />
+            <button
+              className="p-1 bg-blue-950"
+              ref={downloadElem}
+              style={{ display: "none" }}
+              onClick={downloadRecording}
+            >
+              Baixar gravação
+            </button>
+            <br />
+            <pre ref={logElem}></pre>
+          </div>
         </div>
       </>
     );
