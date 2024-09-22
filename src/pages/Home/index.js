@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import WebCam from "../../components/WebCam";
 
 function Home() {
     const videoElem = useRef(null);
@@ -8,8 +9,6 @@ function Home() {
 
     let mediaRecorder;
     let recordedChunks = [];
-
-    const mediaDevices = navigator.mediaDevices;
 
     // Options for getDisplayMedia() with both video and audio
     const displayMediaOptions = {
@@ -116,108 +115,49 @@ function Home() {
       customConsoleLog(JSON.stringify(videoTrack.getConstraints(), null, 2));
     }
 
-    async function playWebCam() {
-      // Acessa a webcam e o áudio do usuário
-      try {
-        const stream = await mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-
-        // Atribui o stream de vídeo à webcam
-        if (webCam.current) {
-          webCam.current.srcObject = stream;
-
-          // Espera o vídeo carregar e iniciar
-          webCam.current.onloadedmetadata = async () => {
-            webCam.current.play();
-
-            // Solicita o Picture-in-Picture assim que o vídeo iniciar
-            try {
-              await webCam.current.requestPictureInPicture();
-            } catch (error) {
-              customConsoleError("Erro ao ativar o Picture-in-Picture: " + error);
-            }
-          };
-        }
-      } catch (error) {
-        customConsoleError("Erro ao acessar a webcam: " + error);
-      }
-    }
-
-    function stopWebCam() {
-      if (document.pictureInPictureElement) {
-        document.exitPictureInPicture().catch((error) => {
-          customConsoleError("Erro ao sair do Picture-in-Picture: " + error);
-        });
-      }
-
-      const stream = webCam.current ? webCam.current.srcObject : null; // Acessa o stream da webcam
-
-      if (stream) {
-        // Para todas as trilhas (tanto de vídeo quanto de áudio)
-        stream.getTracks().forEach((track) => {
-          if (track.readyState === "live") {
-            track.stop(); // Para cada trilha ativa (live)
-          }
-        });
-
-        // Remove o stream do elemento de vídeo
-        if (webCam.current) {
-          webCam.current.srcObject = null;
-        }
-        customConsoleLog("Webcam totalmente parada.");
-      } else {
-        customConsoleLog("Nenhum stream ativo na webcam para parar.");
-      }
-    }
-
     return (
       <>
-        <h2>Gravador de tela</h2>
+        <div className="bg-gray-950 text-white" >
+          <h2 >Gravador de tela</h2>
 
-        <video
-          ref={videoElem}
-          muted
-          autoPlay
-          style={{ width: "600px", border: "1px solid black" }}
-        ></video>
-        <br />
-        <video
-          ref={webCam}
-          controls
-          muted
-          autoPlay
-          hidden
-          style={{ width: "100px", border: "1px solid black" }}
-        ></video>
-        <br />
-        <button className="p-1 m-2 bg-blue-950" onClick={startCapture}>
-          Gravar tela
-        </button>
-        |
-        <button className="p-1 m-2 bg-blue-950" onClick={stopCapture}>
-          Parar gravação
-        </button>
-        <br />
-        <button className="p-1 m-2 bg-blue-950" onClick={playWebCam}>
-          Abrir webCam
-        </button>
-        |
-        <button className="p-1 m-2 bg-blue-950" onClick={stopWebCam}>
-          Parar webcam
-        </button>
-        <br />
-        <button
-          className="p-1 m-2 bg-blue-950"
-          ref={downloadElem}
-          style={{ display: "none" }}
-          onClick={downloadRecording}
-        >
-          Baixar gravação
-        </button>
-        <br />
-        <pre ref={logElem}></pre>
+          <video
+            ref={videoElem}
+            muted
+            autoPlay
+            style={{ width: "600px"}}
+            className="bg-gray-500"
+          ></video>
+          <br />
+          <video
+            ref={webCam}
+            controls
+            muted
+            autoPlay
+            hidden
+            style={{ width: "100px", border: "1px solid black" }}
+          ></video>
+          <br />
+          <button className="p-1 m-2 bg-blue-950" onClick={startCapture}>
+            Gravar tela
+          </button>
+          |
+          <button className="p-1 m-2 bg-blue-950" onClick={stopCapture}>
+            Parar gravação
+          </button>
+          <br />
+          <WebCam webCamRef={webCam}/>
+          <br />
+          <button
+            className="p-1 m-2 bg-blue-950"
+            ref={downloadElem}
+            style={{ display: "none" }}
+            onClick={downloadRecording}
+          >
+            Baixar gravação
+          </button>
+          <br />
+          <pre ref={logElem}></pre>
+        </div>
       </>
     );
 }
