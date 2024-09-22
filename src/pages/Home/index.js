@@ -117,44 +117,47 @@ function Home() {
 
     return (
       <>
-        <h2>Gravador de tela</h2>
+        <div className="bg-gray-950 text-white" >
+          <h2 >Gravador de tela</h2>
 
-        <video
-          ref={videoElem}
-          muted
-          autoPlay
-          style={{ width: "600px", border: "1px solid black" }}
-        ></video>
-        <br />
-        <video
-          ref={webCam}
-          controls
-          muted
-          autoPlay
-          hidden
-          style={{ width: "100px", border: "1px solid black" }}
-        ></video>
-        <br />
-        <button className="p-1 m-2 bg-blue-950" onClick={startCapture}>
-          Gravar tela
-        </button>
-        |
-        <button className="p-1 m-2 bg-blue-950" onClick={stopCapture}>
-          Parar gravação
-        </button>
-        <br />
-        <WebCam webCamRef={webCam}/>
-        <br />
-        <button
-          className="p-1 m-2 bg-blue-950"
-          ref={downloadElem}
-          style={{ display: "none" }}
-          onClick={downloadRecording}
-        >
-          Baixar gravação
-        </button>
-        <br />
-        <pre ref={logElem}></pre>
+          <video
+            ref={videoElem}
+            muted
+            autoPlay
+            style={{ width: "600px"}}
+            className="bg-gray-500"
+          ></video>
+          <br />
+          <video
+            ref={webCam}
+            controls
+            muted
+            autoPlay
+            hidden
+            style={{ width: "100px", border: "1px solid black" }}
+          ></video>
+          <br />
+          <button className="p-1 m-2 bg-blue-950" onClick={startCapture}>
+            Gravar tela
+          </button>
+          |
+          <button className="p-1 m-2 bg-blue-950" onClick={stopCapture}>
+            Parar gravação
+          </button>
+          <br />
+          <WebCam webCamRef={webCam}/>
+          <br />
+          <button
+            className="p-1 m-2 bg-blue-950"
+            ref={downloadElem}
+            style={{ display: "none" }}
+            onClick={downloadRecording}
+          >
+            Baixar gravação
+          </button>
+          <br />
+          <pre ref={logElem}></pre>
+        </div>
       </>
     );
 }
