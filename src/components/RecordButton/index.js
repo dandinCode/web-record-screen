@@ -1,6 +1,8 @@
 import { useState } from "react";
+import playIconSVG from "../../assets/icons/play.svg";
+import pauseIconSVG from "../../assets/icons/pause.svg"
 
-function RecordButton({logElem, videoElem, mediaRecorder, handleDownload, handleRecordedChunks}){
+function RecordButton({videoElem, mediaRecorder, handleDownload, handleRecordedChunks}){
     const [playButton, setPlayButton] = useState(false);
     
     // Options for getDisplayMedia() with both video and audio
@@ -19,17 +21,14 @@ function RecordButton({logElem, videoElem, mediaRecorder, handleDownload, handle
         }
       };
   
-      async function startCapture() {
-        if (!logElem.current) return;
-        logElem.current.textContent = "";
-  
+      async function startCapture() {     
         try {
           const screenStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
           const audioStream = await navigator.mediaDevices.getUserMedia(audioOptions); // Capture microphone audio
   
           // Combine screen and audio streams
           const combinedStream = new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]);
-  
+          console.log("aqui")
           if (videoElem.current) {
             videoElem.current.srcObject = combinedStream;
             startRecording(combinedStream); // Start recording with combined streams
@@ -71,7 +70,6 @@ function RecordButton({logElem, videoElem, mediaRecorder, handleDownload, handle
       }
 
       function handleRecordButton (value){
-        console.log(value)        
         if(value === true){
             startCapture();
         } else{
@@ -82,8 +80,24 @@ function RecordButton({logElem, videoElem, mediaRecorder, handleDownload, handle
     return (
         <>
         <div>
-            <button class="rounded-full px-3 py-1 bg-blue-950" onClick={()=>{handleRecordButton(!playButton)}}>
-                {playButton === false ? <>Gravar tela</> : <>Parar gravação</>}
+            <button class="flex items-center justify-center rounded-full px-3 py-1 bg-blue-950 " onClick={()=>{handleRecordButton(!playButton)}}>
+                {playButton === false ? 
+                <>
+                  <span className="inline-block align-middle"> 
+                      <img src={playIconSVG} style={{ width: "18px"}} /> 
+                    </span> 
+                    <span className="ps-1">
+                      Gravar tela
+                  </span>
+                </> : 
+                <>
+                  <span className=""> 
+                      <img src={pauseIconSVG} style={{ width: "18px"}} /> 
+                    </span> 
+                    <span className="ps-1 ">
+                      Parar gravação
+                  </span>
+                </>}
             </button>
             
         </div>
