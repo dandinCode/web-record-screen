@@ -89,13 +89,13 @@ function Home() {
     }
 
     function downloadRecording() {
-      const blob = new Blob(recordedChunks, { type: "video/webm" });
+      const blob = new Blob(recordedChunks, { type: "video/mp4" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
 
       a.style.display = "none";
       a.href = url;
-      a.download = "screen-recording.webm";
+      a.download = "screen-recording.mp4";
 
       document.body.appendChild(a);
       a.click();
