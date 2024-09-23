@@ -21,14 +21,12 @@ function Home() {
     const handleRecordedChunks = (value) =>{
       setRecordedChunks(value);
     }
-  
-
+    
     return (
       <>
         <div className="flex justify-center" >
           <div  className="text-white">
             <h1 className="flex justify-center font-serif text-5xl py-4">Gravador de tela</h1>
-
             <video
               ref={videoElem}
               muted
@@ -36,7 +34,6 @@ function Home() {
               style={{ width: "600px"}}
               className="bg-gray-500"
             ></video>
-            <br />
             <video
               ref={webCam}
               controls

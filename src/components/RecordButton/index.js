@@ -5,12 +5,12 @@ import pauseIconSVG from "../../assets/icons/pause.svg"
 function RecordButton({videoElem, mediaRecorder, handleDownload, handleRecordedChunks}){
     const [playButton, setPlayButton] = useState(false);
     
-    // Options for getDisplayMedia() with both video and audio
+    
     const displayMediaOptions = {
         video: {
-          displaySurface: "window", // Can also be "browser" or "monitor"
+          displaySurface: "window", 
         },
-        audio: false, // Temporarily disable audio here, will add microphone separately
+        audio: false, 
       };
   
       const audioOptions = {
@@ -24,14 +24,12 @@ function RecordButton({videoElem, mediaRecorder, handleDownload, handleRecordedC
       async function startCapture() {     
         try {
           const screenStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
-          const audioStream = await navigator.mediaDevices.getUserMedia(audioOptions); // Capture microphone audio
-  
-          // Combine screen and audio streams
+          const audioStream = await navigator.mediaDevices.getUserMedia(audioOptions);   
+          
           const combinedStream = new MediaStream([...screenStream.getTracks(), ...audioStream.getTracks()]);
-          console.log("aqui")
           if (videoElem.current) {
             videoElem.current.srcObject = combinedStream;
-            startRecording(combinedStream); // Start recording with combined streams
+            startRecording(combinedStream); 
           }
         } catch (err) {
           console.log(err);
@@ -45,12 +43,11 @@ function RecordButton({videoElem, mediaRecorder, handleDownload, handleRecordedC
         tracks.forEach((track) => track.stop());
         videoElem.current.srcObject = null;
         
-        if (mediaRecorder) mediaRecorder.stop(); // Stop recording
+        if (mediaRecorder) mediaRecorder.stop(); 
         console.log("Recording stoped.");
         setPlayButton(false);
         // Show download button
-        handleDownload(true)
-        
+        handleDownload(true);        
       }
   
       function startRecording(stream) {

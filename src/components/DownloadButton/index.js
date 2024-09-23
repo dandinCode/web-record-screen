@@ -13,7 +13,6 @@ function DownloadButton({recordedChunks}) {
         document.body.appendChild(a);
         a.click();
   
-        // Cleanup
         URL.revokeObjectURL(url);
         document.body.removeChild(a);
   
@@ -26,12 +25,12 @@ function DownloadButton({recordedChunks}) {
               className="flex items-center justify-center rounded-full px-3 py-1 bg-blue-950"
               onClick={downloadRecording}
             >
-              <span className=""> 
-                <img src={downloadIconSVG} style={{ width: "20px"}} /> 
-              </span> 
-              <span className="ps-1">
-                Baixar gravação
-            </span>
+                <span className=""> 
+                    <img src={downloadIconSVG} style={{ width: "20px"}} /> 
+                </span> 
+                <span className="ps-1">
+                    Baixar gravação
+                </span>
             </button>
         </>
     )
