@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import WebCam from "../../components/WebCam";
 import RecordButton from "../../components/RecordButton";
 import DownloadButton from "../../components/DownloadButton";
